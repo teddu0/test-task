@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Получить секретное значение</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background-color: #f0f0f0;
+      }
+      .container {
+        text-align: center; /* Выравниваем содержимое по центру */
+      }
+      #secret {
+        margin-top: 20px;
+        font-size: 1.2em;
+        color: #333;
+        width: 100%; /* Занимает всю ширину контейнера */
+        word-wrap: break-word; /* Перенос слов, если текст слишком длинный */
+      }
+      button {
+        padding: 10px 20px;
+        font-size: 1em;
+        cursor: pointer;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+      }
+      button:hover {
+        background-color: #0056b3;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <button id="getSecretButton">Получить секретное значение</button>
+      <div id="secret"></div>
+    </div>
+
+    <script>
+      document
+        .getElementById("getSecretButton")
+        .addEventListener("click", async function () {
+          try {
+            // Отправляем POST-запрос, как в curl
+            const response = await fetch(
+              "https://aggregate-dani-testyourself-35abb403.koyeb.app/generate",
+              {
+                method: "POST", // Метод POST
+                headers: {
+                  "Content-Type": "application/json", // Указываем тип содержимого
+                },
+              }
+            );
+
+            // Проверяем статус ответа
+            if (!response.ok) {
+              throw new Error(`Ошибка HTTP: ${response.status}`);
+            }
+
+            // Парсим JSON-ответ
+            const data = await response.json();
+            document.getElementById(
+              "secret"
+            ).textContent = `Ура! Теперь поторопись забрать ответ от сервера, у тебя ровно 60 секунд!`;
+          } catch (error) {
+            console.error("Ошибка при получении данных:", error);
+            document.getElementById("secret").textContent =
+              "Ошибка при получении данных: " + error.message;
+          }
+        });
+    </script>
+  </body>
+</html>
